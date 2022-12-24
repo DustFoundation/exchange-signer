@@ -1,3 +1,1 @@
-# @dustfoundation/exchange-signer
-
-### Beautiful, Handsome
+# @dustfoundation/exchanges-signer

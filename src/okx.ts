@@ -1,21 +1,19 @@
 import type { AxiosRequestConfig } from 'axios';
 import { createHmac } from 'node:crypto';
 
-export function signRequestKUCOIN(
+export function signRequest(
   config: AxiosRequestConfig,
   data: { key: string; secret: string; passphrase: string },
 ): AxiosRequestConfig {
-  const now = Date.now();
+  const isoTimestamp = new Date().toISOString();
 
-  config.headers!['KC-API-TIMESTAMP'] = now.toString();
-  config.headers!['KC-API-KEY-VERSION'] = '2';
-  config.headers!['KC-API-KEY'] = data.key;
-  config.headers!['KC-API-PASSPHRASE'] = createHmac('sha256', data.secret)
-    .update(data.passphrase)
-    .digest('base64');
-  config.headers!['KC-API-SIGN'] = createHmac('sha256', data.secret)
+  config.headers ??= {};
+  config.headers!['OK-ACCESS-TIMESTAMP'] = isoTimestamp;
+  config.headers!['OK-ACCESS-KEY'] = data.key;
+  config.headers!['OK-ACCESS-PASSPHRASE'] = data.passphrase;
+  config.headers!['OK-ACCESS-SIGN'] = createHmac('sha256', data.secret)
     .update(
-      `${now}${config.method!.toUpperCase()}${config.url}${
+      `${isoTimestamp}${config.method!.toUpperCase()}${config.url}${
         config.data
           ? JSON.stringify(config.data)
           : config.params && Object.keys(config.params).length

@@ -1,14 +1,14 @@
 import type { AxiosRequestConfig } from 'axios';
 import { createHmac } from 'node:crypto';
 
-export function signRequestCRYPTOCOM(
+export function signRequest(
   config: AxiosRequestConfig,
   data: { key: string; secret: string },
 ): AxiosRequestConfig {
   const now = Date.now();
   const nonce = now - 1000;
 
-  const sha256String = createHmac('sha256', data.key)
+  const sha256String = createHmac('sha256', data.secret)
     .update(
       `${config.url}${now}${data.key}${
         config.data

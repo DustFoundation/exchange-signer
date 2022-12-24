@@ -1,12 +1,13 @@
 import type { AxiosRequestConfig } from 'axios';
 import { createHmac } from 'node:crypto';
 
-export function signRequestCOINBASE(
+export function signRequest(
   config: AxiosRequestConfig,
   data: { key: string; secret: string },
 ): AxiosRequestConfig {
   const now = Math.trunc(Date.now() / 1000);
 
+  config.headers ??= {};
   config.headers!['CB-ACCESS-TIMESTAMP'] = now;
   config.headers!['CB-ACCESS-KEY'] = data.key;
   config.headers!['CB-ACCESS-SIGN'] = createHmac('sha256', data.secret)
